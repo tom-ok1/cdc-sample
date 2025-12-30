@@ -24,7 +24,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
     networks:
       - cdc-network
 
@@ -63,8 +63,8 @@ services:
       STATUS_STORAGE_TOPIC: connect_statuses
       KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
-      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: 'false'
-      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false'
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
     networks:
       - cdc-network
     healthcheck:
@@ -86,9 +86,7 @@ services:
         echo 'Waiting for Kafka Connect to be ready...';
         sleep 10;
         echo 'Registering Debezium connector...';
-        curl -X POST http://kafka-connect:8083/connectors \
-          -H 'Content-Type: application/json' \
-          -d @/debezium/register-connector.json;
+        curl -X POST http://kafka-connect:8083/connectors -H 'Content-Type: application/json' -d @/debezium/register-connector.json;
         echo 'Connector registration complete';
       "
     networks:
