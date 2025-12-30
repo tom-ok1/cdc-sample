@@ -2,6 +2,8 @@ package com.example.producer.service;
 
 import com.example.producer.dto.CreateOrderRequest;
 import com.example.producer.dto.OrderItemRequest;
+import com.example.producer.dto.OrderItemResponse;
+import com.example.producer.dto.OrderResponse;
 import com.example.producer.entity.Order;
 import com.example.producer.entity.OrderItem;
 import com.example.producer.entity.Product;
@@ -24,7 +26,7 @@ public class OrderService {
     private final ProductRepository productRepository;
 
     @Transactional
-    public Order createOrder(CreateOrderRequest request) {
+    public OrderResponse createOrder(CreateOrderRequest request) {
         List<Long> productIds = request.getItems().stream()
                 .map(OrderItemRequest::getProductId)
                 .collect(Collectors.toList());
@@ -59,23 +61,54 @@ public class OrderService {
 
         order.setTotalPrice(totalPrice);
 
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        return convertToResponse(savedOrder);
     }
 
     @Transactional
-    public Order updateOrderStatus(Long orderId, String status) {
+    public OrderResponse updateOrderStatus(Long orderId, String status) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(status);
-        return orderRepository.save(order);
+        Order savedOrder = orderRepository.save(order);
+        return convertToResponse(savedOrder);
     }
 
-    public Order getOrder(Long orderId) {
-        return orderRepository.findById(orderId)
+    public OrderResponse getOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+        return convertToResponse(order);
     }
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderResponse> getAllOrders() {
+        return orderRepository.findAll().stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    private OrderResponse convertToResponse(Order order) {
+        List<OrderItemResponse> itemResponses = order.getItems().stream()
+                .map(this::convertToItemResponse)
+                .collect(Collectors.toList());
+
+        return new OrderResponse(
+                order.getId(),
+                order.getUserId(),
+                order.getStatus(),
+                order.getTotalPrice(),
+                order.getOrderedAt(),
+                order.getUpdatedAt(),
+                itemResponses
+        );
+    }
+
+    private OrderItemResponse convertToItemResponse(OrderItem item) {
+        return new OrderItemResponse(
+                item.getId(),
+                item.getProductId(),
+                item.getQuantity(),
+                item.getUnitPrice(),
+                item.getCreatedAt()
+        );
     }
 }

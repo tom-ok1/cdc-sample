@@ -65,6 +65,38 @@ The database is pre-populated with 5 products. Verify they're cached in the cons
 curl http://localhost:8081/api/products
 ```
 
+## Rebuilding Services After Code Changes
+
+When you make code changes to the producer or consumer services, you need to rebuild and restart the containers:
+
+### Rebuild a Specific Service
+
+```bash
+# Rebuild and restart the producer service
+docker-compose up -d --build producer
+
+# Rebuild and restart the consumer service
+docker-compose up -d --build consumer
+```
+
+### Rebuild All Services
+
+```bash
+# Rebuild and restart all services
+docker-compose up -d --build
+```
+
+### Verify the Service is Running
+
+```bash
+# Check container status
+docker-compose ps
+
+# Check service logs
+docker-compose logs -f producer
+docker-compose logs -f consumer
+```
+
 ## Usage Examples
 
 ### Create an Order
