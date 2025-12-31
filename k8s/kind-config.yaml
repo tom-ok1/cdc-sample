@@ -1,0 +1,18 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: cdc-local
+nodes:
+- role: control-plane
+  extraPortMappings:
+  # ArgoCD UI
+  - containerPort: 30080
+    hostPort: 8080
+    protocol: TCP
+  # Producer app
+  - containerPort: 30081
+    hostPort: 8081
+    protocol: TCP
+  # Consumer app
+  - containerPort: 30082
+    hostPort: 8082
+    protocol: TCP
