@@ -39,6 +39,8 @@ spec:
               value: "PLAINTEXT://kafka:29092,EXTERNAL://kafka:9092"
             - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
               value: "PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
+            - name: CLUSTER_ID
+              value: "MkU3OEVBNTcwNTJENDM2Qk"
           volumeMounts:
             - name: kafka-data
               mountPath: /var/lib/kafka/data
