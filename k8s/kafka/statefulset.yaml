@@ -28,35 +28,31 @@ spec:
               echo "Zookeeper is ready"
       containers:
         - name: kafka
-          image: confluentinc/cp-kafka:7.5.0
+          image: bitnami/kafka:3.6.2
           ports:
             - containerPort: 9092
               name: plaintext
             - containerPort: 29092
               name: internal
           env:
-            - name: KAFKA_BROKER_ID
-              value: "1"
-            - name: KAFKA_ZOOKEEPER_CONNECT
+            - name: KAFKA_CFG_ZOOKEEPER_CONNECT
               value: "zookeeper:2181"
-            - name: KAFKA_LISTENERS
-              value: "PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092"
-            - name: KAFKA_ADVERTISED_LISTENERS
-              value: "PLAINTEXT://kafka:29092,PLAINTEXT_HOST://kafka:9092"
-            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
-            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+            - name: KAFKA_CFG_LISTENERS
+              value: "PLAINTEXT://:29092,EXTERNAL://:9092"
+            - name: KAFKA_CFG_ADVERTISED_LISTENERS
+              value: "PLAINTEXT://kafka:29092,EXTERNAL://kafka:9092"
+            - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT"
+            - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
               value: "PLAINTEXT"
-            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+            - name: KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR
               value: "1"
-            - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
+            - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
               value: "true"
             - name: KAFKA_HEAP_OPTS
               value: "-Xmx512M -Xms512M"
-            - name: KAFKA_LOG4J_ROOT_LOGLEVEL
-              value: "DEBUG"
-            - name: KAFKA_TOOLS_LOG4J_LOGLEVEL
-              value: "DEBUG"
+            - name: ALLOW_PLAINTEXT_LISTENER
+              value: "yes"
           volumeMounts:
             - name: kafka-data
               mountPath: /var/lib/kafka/data
