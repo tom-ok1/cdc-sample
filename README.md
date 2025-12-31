@@ -343,6 +343,37 @@ docker-compose down -v
 7. **Storage**: Document is stored in-memory (ConcurrentHashMap)
 8. **Retrieval**: Documents are accessible via REST API
 
+## Kubernetes Deployment
+
+The application can also be deployed to Kubernetes (Docker Desktop). See the [k8s/README.md](k8s/README.md) for detailed instructions.
+
+### Quick Start with Kubernetes
+
+1. Enable Kubernetes in Docker Desktop (Settings → Kubernetes)
+2. Build the Docker images:
+   ```bash
+   docker build -t cdc-producer:latest ./producer
+   docker build -t cdc-consumer:latest ./consumer
+   ```
+3. Deploy to Kubernetes:
+   ```bash
+   cd k8s
+   ./deploy.sh
+   ```
+4. Test the deployment:
+   ```bash
+   curl http://localhost:8081/api/products
+   ```
+
+The Kubernetes manifests are organized by component:
+- `zookeeper/` - Coordination service
+- `kafka/` - Message broker
+- `postgres/` - Source database
+- `kafka-connect/` - Debezium connector runtime
+- `debezium/` - Connector registration
+- `producer/` - Order management API
+- `consumer/` - CDC consumer and aggregator
+
 ## Future Enhancements
 
 - Replace in-memory storage with Elasticsearch

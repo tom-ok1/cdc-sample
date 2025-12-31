@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: debezium-connector-cm
+  namespace: data-platform
+data:
+  register-connector.json: |
+    {
+      "name": "postgres-connector",
+      "config": {
+        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+        "database.hostname": "postgres",
+        "database.port": "5432",
+        "database.user": "postgres",
+        "database.password": "postgres",
+        "database.dbname": "producer_db",
+        "database.server.name": "dbserver1",
+        "table.include.list": "public.orders,public.order_items,public.products",
+        "plugin.name": "pgoutput",
+        "topic.prefix": "dbserver1",
+        "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+        "key.converter.schemas.enable": "false",
+        "value.converter.schemas.enable": "false",
+        "snapshot.mode": "initial",
+        "decimal.handling.mode": "string"
+      }
+    }

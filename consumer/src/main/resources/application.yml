@@ -22,5 +22,5 @@ management:
 
 logging:
   level:
-    com.example.consumer: INFO
+    com.example.consumer: DEBUG
     org.apache.kafka: WARN
