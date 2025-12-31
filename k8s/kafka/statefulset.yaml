@@ -49,9 +49,6 @@ spec:
               value: "1"
             - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
               value: "true"
-          volumeMounts:
-            - name: kafka-data
-              mountPath: /var/lib/kafka
           resources:
             requests:
               memory: "1Gi"
@@ -69,7 +66,3 @@ spec:
               port: 9092
             initialDelaySeconds: 90
             periodSeconds: 10
-      volumes:
-        - name: kafka-data
-          persistentVolumeClaim:
-            claimName: kafka-data
