@@ -30,9 +30,6 @@ echo ""
 echo "Deleting infrastructure applications..."
 kubectl delete -f apps/postgres-app.yaml --ignore-not-found=true
 kubectl delete -f apps/kafka-app.yaml --ignore-not-found=true
-if [ -f apps/zookeeper-app.yaml ]; then
-  kubectl delete -f apps/zookeeper-app.yaml --ignore-not-found=true
-fi
 echo ""
 
 echo "Waiting for infrastructure to be removed..."
