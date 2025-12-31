@@ -53,6 +53,13 @@ spec:
               value: "true"
             - name: KAFKA_HEAP_OPTS
               value: "-Xmx512M -Xms512M"
+            - name: KAFKA_LOG4J_ROOT_LOGLEVEL
+              value: "DEBUG"
+            - name: KAFKA_TOOLS_LOG4J_LOGLEVEL
+              value: "DEBUG"
+          volumeMounts:
+            - name: kafka-data
+              mountPath: /var/lib/kafka/data
           resources:
             requests:
               memory: "1Gi"
@@ -70,3 +77,6 @@ spec:
               port: 9092
             initialDelaySeconds: 90
             periodSeconds: 10
+      volumes:
+        - name: kafka-data
+          emptyDir: {}
