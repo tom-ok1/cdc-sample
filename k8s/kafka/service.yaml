@@ -12,5 +12,8 @@ spec:
     - port: 29092
       targetPort: 29092
       name: internal
+    - port: 9093
+      targetPort: 9093
+      name: controller
   selector:
     app: kafka
