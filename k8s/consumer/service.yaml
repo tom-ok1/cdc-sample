@@ -4,10 +4,11 @@ metadata:
   name: consumer
   namespace: data-platform
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - port: 8081
       targetPort: 8081
+      nodePort: 32008
       name: http
   selector:
     app: consumer

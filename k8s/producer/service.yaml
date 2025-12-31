@@ -4,10 +4,11 @@ metadata:
   name: producer
   namespace: data-platform
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
     - port: 8080
       targetPort: 8080
+      nodePort: 30942
       name: http
   selector:
     app: producer
