@@ -18,7 +18,6 @@ sleep 5
 echo ""
 
 echo "Deploying infrastructure applications..."
-kubectl apply -f apps/zookeeper-app.yaml
 kubectl apply -f apps/kafka-app.yaml
 kubectl apply -f apps/postgres-app.yaml
 echo ""

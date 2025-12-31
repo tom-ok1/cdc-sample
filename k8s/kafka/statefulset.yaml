@@ -76,6 +76,12 @@ spec:
               port: 9092
             initialDelaySeconds: 90
             periodSeconds: 10
-      volumes:
-        - name: kafka-data
-          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: kafka-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
