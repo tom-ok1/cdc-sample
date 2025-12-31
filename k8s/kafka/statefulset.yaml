@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: kafka
-          image: bitnami/kafka:3.8
+          image: bitnami/kafka-broker:3.8.0
           ports:
             - containerPort: 9092
               name: plaintext
