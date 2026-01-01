@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka
+  name: kafka-headless
   namespace: data-platform
 spec:
-  type: ClusterIP  # Regular service for client connections
+  clusterIP: None  # Headless service for StatefulSet
   ports:
     - port: 9092
       targetPort: 9092
