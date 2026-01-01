@@ -5,6 +5,7 @@ metadata:
   namespace: data-platform
 spec:
   clusterIP: None  # Headless service for StatefulSet
+  publishNotReadyAddresses: true  # Create DNS records even for non-ready pods
   ports:
     - port: 9092
       targetPort: 9092
