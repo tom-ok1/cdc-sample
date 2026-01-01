@@ -5,7 +5,7 @@ metadata:
   namespace: data-platform
 spec:
   serviceName: kafka
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: kafka
@@ -18,6 +18,17 @@ spec:
       containers:
         - name: kafka
           image: confluentinc/cp-kafka:7.7.0
+
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              ORDINAL=${HOSTNAME##*-}
+              # set node.id based on StatefulSet ordinal
+              export KAFKA_NODE_ID=$((ORDINAL + 1))
+              export KAFKA_CONTROLLER_QUORUM_VOTERS="1@kafka-0.kafka.data-platform.svc.cluster.local:9093,2@kafka-1.kafka.data-platform.svc.cluster.local:9093,3@kafka-2.kafka.data-platform.svc.cluster.local:9093"
+              export KAFKA_ADVERTISED_LISTENERS="PLAINTEXT://kafka-${ORDINAL}.kafka.data-platform.svc.cluster.local:29092,EXTERNAL://kafka.data-platform.svc.cluster.local:9092"
+              exec /etc/confluent/docker/run
+
           ports:
             - containerPort: 9092
               name: plaintext
@@ -28,30 +39,24 @@ spec:
           env:
             - name: CLUSTER_ID
               value: "MkU3OEVBNTcwNTJENDM2Qk"
-            - name: KAFKA_NODE_ID
-              value: "1"
             - name: KAFKA_PROCESS_ROLES
               value: "broker,controller"
-            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
-              value: "1@kafka-0.kafka.data-platform.svc.cluster.local:9093"
             - name: KAFKA_CONTROLLER_LISTENER_NAMES
               value: "CONTROLLER"
             - name: KAFKA_INTER_BROKER_LISTENER_NAME
               value: "PLAINTEXT"
             - name: KAFKA_LISTENERS
               value: "PLAINTEXT://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093"
-            - name: KAFKA_ADVERTISED_LISTENERS
-              value: "PLAINTEXT://kafka-0.kafka.data-platform.svc.cluster.local:29092,EXTERNAL://kafka.data-platform.svc.cluster.local:9092"
             - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
               value: "PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT"
             - name: KAFKA_LOG_DIRS
               value: "/var/lib/kafka/data"
             - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
-              value: "1"
+              value: "3"
             - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
-              value: "1"
+              value: "3"
             - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
-              value: "1"
+              value: "2"
             - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
               value: "true"
             - name: KAFKA_LOG_RETENTION_HOURS
