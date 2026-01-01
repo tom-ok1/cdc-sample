@@ -26,7 +26,7 @@ spec:
               ORDINAL=${HOSTNAME##*-}
               # set node.id based on StatefulSet ordinal
               export KAFKA_NODE_ID=$((ORDINAL + 1))
-              export KAFKA_CONTROLLER_QUORUM_VOTERS=""1@kafka-0.kafka:9093,2@kafka-1.kafka:9093,3@kafka-2.kafka:9093""
+              export KAFKA_CONTROLLER_QUORUM_VOTERS="1@kafka-0.kafka:9093,2@kafka-1.kafka:9093,3@kafka-2.kafka:9093"
               export KAFKA_ADVERTISED_LISTENERS="PLAINTEXT://kafka-${ORDINAL}.kafka-headless.data-platform.svc.cluster.local:29092,EXTERNAL://kafka.data-platform.svc.cluster.local:9092"
               exec /etc/confluent/docker/run
 
