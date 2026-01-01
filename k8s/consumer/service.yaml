@@ -8,7 +8,7 @@ spec:
   ports:
     - port: 8081
       targetPort: 8081
-      nodePort: 32008
+      nodePort: 30082
       name: http
   selector:
     app: consumer
