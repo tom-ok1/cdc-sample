@@ -19,7 +19,7 @@ import java.util.Optional;
 public class ProductCacheService {
 
     private final DocumentStoreRepository repository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Transactional
     public void save(ProductData product) {

@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class ProductsKafkaListener {
 
     private final DocumentAggregatorService aggregatorService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @KafkaListener(topics = "dbserver1.public.products", groupId = "cdc-consumer-group")
     public void consume(String message) {

@@ -23,7 +23,7 @@ public class DocumentAggregatorService {
     private final DocumentStoreService documentStoreService;
     private final ProductCacheService productCacheService;
     private final DocumentStoreRepository repository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Transactional
     public void handleOrderEvent(Long orderId, Long userId, String status,

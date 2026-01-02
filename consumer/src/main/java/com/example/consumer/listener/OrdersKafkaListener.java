@@ -20,7 +20,7 @@ import java.time.ZoneId;
 public class OrdersKafkaListener {
 
     private final DocumentAggregatorService aggregatorService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @KafkaListener(topics = "dbserver1.public.orders", groupId = "cdc-consumer-group")
     public void consume(String message) {

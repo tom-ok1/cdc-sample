@@ -4,7 +4,6 @@ import com.example.consumer.dto.OrderDocument;
 import com.example.consumer.entity.DocumentStoreEntity;
 import com.example.consumer.repository.DocumentStoreRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 public class DocumentStoreService {
 
     private final DocumentStoreRepository repository;
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private final ObjectMapper objectMapper;
 
     @Transactional
     public void save(OrderDocument document) {
