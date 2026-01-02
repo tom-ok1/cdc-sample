@@ -39,6 +39,17 @@ data:
     CREATE INDEX idx_order_items_order_id ON order_items(order_id);
     CREATE INDEX idx_order_items_product_id ON order_items(product_id);
 
+    -- Create key-value store table for consumer aggregated documents
+    CREATE TABLE document_store (
+        id VARCHAR(255) PRIMARY KEY,
+        data JSONB NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    -- Create index on JSONB data for better query performance
+    CREATE INDEX idx_document_store_data ON document_store USING GIN (data);
+
     -- Insert some sample products for testing
     INSERT INTO products (name, price, description) VALUES
     ('Laptop', 1200.00, 'High-performance laptop'),

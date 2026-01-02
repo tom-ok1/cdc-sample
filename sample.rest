@@ -1,0 +1,256 @@
+###
+### CDC Sample Project - API Testing
+### Producer Service: localhost:8081 (kind hostPort mapping from NodePort 30081)
+### Consumer Service: localhost:8082 (kind hostPort mapping from NodePort 30082)
+###
+
+###############################################################################
+# PRODUCER SERVICE - Product Management
+###############################################################################
+
+### 1. Get all products (check initial sample data)
+GET http://localhost:8081/api/products
+
+### 2. Get a specific product by ID
+GET http://localhost:8081/api/products/1
+
+### 3. Create a new product
+POST http://localhost:8081/api/products
+Content-Type: application/json
+
+{
+  "name": "Keyboard",
+  "price": 75.00,
+  "description": "Mechanical gaming keyboard"
+}
+
+### 4. Create another product
+POST http://localhost:8081/api/products
+Content-Type: application/json
+
+{
+  "name": "Monitor",
+  "price": 350.00,
+  "description": "27-inch 4K monitor"
+}
+
+### 5. Update existing product
+PUT http://localhost:8081/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Gaming Laptop",
+  "price": 1200.00,
+  "description": "High-performance gaming laptop with RTX graphics"
+}
+
+###############################################################################
+# PRODUCER SERVICE - Order Management
+###############################################################################
+
+### 6. Get all orders
+GET http://localhost:8081/api/orders
+
+### 7. Get a specific order by ID
+GET http://localhost:8081/api/orders/1
+
+### 8. Create a new order (use product IDs from products list)
+POST http://localhost:8081/api/orders
+Content-Type: application/json
+
+{
+  "userId": 1001,
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2
+    },
+    {
+      "productId": 2,
+      "quantity": 1
+    }
+  ]
+}
+
+### 9. Create another order with single item
+POST http://localhost:8081/api/orders
+Content-Type: application/json
+
+{
+  "userId": 1002,
+  "items": [
+    {
+      "productId": 3,
+      "quantity": 3
+    }
+  ]
+}
+
+### 10. Create order with multiple items
+POST http://localhost:8081/api/orders
+Content-Type: application/json
+
+{
+  "userId": 1003,
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 1
+    },
+    {
+      "productId": 2,
+      "quantity": 2
+    },
+    {
+      "productId": 3,
+      "quantity": 1
+    }
+  ]
+}
+
+### 11. Update order status to PAID (replace :orderId with actual order ID)
+PUT http://localhost:8081/api/orders/1/status?status=PAID
+
+### 12. Update order status to SHIPPED
+PUT http://localhost:8081/api/orders/1/status?status=SHIPPED
+
+### 13. Update order status to DELIVERED
+PUT http://localhost:8081/api/orders/1/status?status=DELIVERED
+
+### 14. Update order status to CANCELLED
+PUT http://localhost:8081/api/orders/2/status?status=CANCELLED
+
+###############################################################################
+# CONSUMER SERVICE - Document Aggregation (CDC Results)
+###############################################################################
+
+### 15. Get all aggregated documents
+# Wait 2-3 seconds after creating orders for CDC propagation
+GET http://localhost:8082/api/documents
+
+### 16. Get a specific aggregated document by order ID
+GET http://localhost:8082/api/documents/1
+
+### 17. Get document statistics
+GET http://localhost:8082/api/documents/stats
+
+### 18. Get cached products from consumer
+# This shows products cached from the CDC stream
+GET http://localhost:8082/api/products
+
+###############################################################################
+# TEST SCENARIOS
+###############################################################################
+
+### Scenario 1: Complete Order Flow
+### Step 1: Create an order
+POST http://localhost:8081/api/orders
+Content-Type: application/json
+
+{
+  "userId": 2001,
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 1
+    },
+    {
+      "productId": 2,
+      "quantity": 2
+    }
+  ]
+}
+
+### Step 2: Wait 2-3 seconds for CDC propagation, then check aggregated document
+### (Replace :orderId with the ID from Step 1 response)
+GET http://localhost:8082/api/documents/1
+
+### Step 3: Update order status
+PUT http://localhost:8081/api/orders/1/status?status=PAID
+
+### Step 4: Wait 2-3 seconds, then verify status update in document
+GET http://localhost:8082/api/documents/1
+
+###
+
+### Scenario 2: Product Update Propagation
+### Step 1: Update product details
+PUT http://localhost:8081/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Premium Gaming Laptop",
+  "price": 1500.00,
+  "description": "Top-tier gaming laptop with latest RTX graphics"
+}
+
+### Step 2: Wait 2-3 seconds for CDC propagation, check consumer cache
+GET http://localhost:8082/api/products
+
+### Step 3: Verify product name updated in existing documents
+GET http://localhost:8082/api/documents
+
+###
+
+### Scenario 3: Multiple Orders Test
+### Create multiple orders in quick succession
+POST http://localhost:8081/api/orders
+Content-Type: application/json
+
+{
+  "userId": 3001,
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 5
+    }
+  ]
+}
+
+###
+POST http://localhost:8081/api/orders
+Content-Type: application/json
+
+{
+  "userId": 3002,
+  "items": [
+    {
+      "productId": 2,
+      "quantity": 10
+    }
+  ]
+}
+
+###
+POST http://localhost:8081/api/orders
+Content-Type: application/json
+
+{
+  "userId": 3003,
+  "items": [
+    {
+      "productId": 3,
+      "quantity": 3
+    },
+    {
+      "productId": 4,
+      "quantity": 2
+    }
+  ]
+}
+
+### Wait 3-5 seconds, then check all documents
+GET http://localhost:8082/api/documents
+
+### Check statistics
+GET http://localhost:8082/api/documents/stats
+
+###############################################################################
+# HEALTH CHECKS
+###############################################################################
+
+### Check producer health
+GET http://localhost:8081/actuator/health
+
+### Check consumer health
+GET http://localhost:8082/actuator/health
