@@ -365,6 +365,37 @@ The application can also be deployed to Kubernetes (Docker Desktop). See the [k8
    curl http://localhost:8081/api/products
    ```
 
+### Using kind (Kubernetes in Docker)
+
+If you're using kind for local development, use these commands to build and load images:
+
+```bash
+# Build and load images into kind cluster
+docker build -t cdc-producer:latest ./producer && \
+docker build -t cdc-consumer:latest ./consumer && \
+kind load docker-image cdc-producer:latest --name cdc-local && \
+kind load docker-image cdc-consumer:latest --name cdc-local
+```
+
+Or build and load them separately:
+
+```bash
+# Build images
+docker build -t cdc-producer:latest ./producer
+docker build -t cdc-consumer:latest ./consumer
+
+# Load images into kind cluster
+kind load docker-image cdc-producer:latest --name cdc-local
+kind load docker-image cdc-consumer:latest --name cdc-local
+```
+
+After loading the images, deploy the application:
+
+```bash
+cd k8s
+./deploy.sh
+```
+
 The Kubernetes manifests are organized by component:
 - `zookeeper/` - Coordination service
 - `kafka/` - Message broker
