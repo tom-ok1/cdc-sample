@@ -1,8 +1,6 @@
 package com.example.consumer.controller;
 
 import com.example.consumer.dto.OrderDocument;
-import com.example.consumer.dto.ProductData;
-import com.example.consumer.service.DocumentAggregatorService;
 import com.example.consumer.service.DocumentStoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +18,6 @@ import java.util.Map;
 public class DocumentController {
 
     private final DocumentStoreService documentStoreService;
-    private final DocumentAggregatorService aggregatorService;
 
     @GetMapping("/documents")
     public ResponseEntity<List<OrderDocument>> getAllDocuments() {
@@ -39,11 +36,5 @@ public class DocumentController {
     public ResponseEntity<Map<String, Object>> getStats() {
         Map<String, Object> stats = documentStoreService.getStats();
         return ResponseEntity.ok(stats);
-    }
-
-    @GetMapping("/products")
-    public ResponseEntity<Map<Long, ProductData>> getProducts() {
-        Map<Long, ProductData> products = aggregatorService.getProductCache();
-        return ResponseEntity.ok(products);
     }
 }

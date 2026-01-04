@@ -19,12 +19,6 @@ spring:
 
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    consumer:
-      group-id: cdc-consumer-group
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      enable-auto-commit: true
 
 server:
   port: 8081
@@ -33,7 +27,12 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,kafkastreams
+
+kafka:
+  streams:
+    state:
+      dir: ${KAFKA_STREAMS_STATE_DIR:/tmp/kafka-streams}
 
 logging:
   level:
